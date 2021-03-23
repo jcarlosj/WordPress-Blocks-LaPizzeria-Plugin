@@ -21,6 +21,7 @@
   "author": "Juan Carlos Jiménez Gutiérrez <jcjimenez@misena.edu.co>",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^14.0.1"
+    "@wordpress/scripts": "^14.0.1",
+    "toml": "^3.0.0"
   }
 }
