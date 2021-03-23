@@ -1,0 +1,11 @@
+{
+  "name": "lapizzeria-gutenberg",
+  "version": "1.0.0",
+  "description": "Bloques nativos de Gutenberg para La Pizzería",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juan Carlos Jiménez Gutiérrez <jcjimenez@misena.edu.co>",
+  "license": "ISC"
+}
