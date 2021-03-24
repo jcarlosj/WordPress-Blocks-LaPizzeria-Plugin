@@ -15,6 +15,22 @@
 
 if( ! defined( 'ABSPATH' ) )  exit;     //  Evita acceso al codigo del plugin
 
+/** Crea nueva categoría de bloques y agrega a las categorías existentes */
+function lapizzeria_block_category_register( $categories, $current_post ) {
+    return array_merge(
+        $categories,
+        [
+            [
+                'slug'  => 'lapizzeria',
+                'title' =>  __( 'La Pizzería', 'plugin-lapizzeria-bkl' ),
+                'description' =>  __( 'Blocks for the theme \'La Pizzeria\' ', 'plugin-lapizzeria-bkl' ),
+                'icon'  => 'store'  # Dashicons
+            ]
+        ]
+    );
+}
+add_filter( 'block_categories', 'lapizzeria_block_category_register', 10, 2 );      # Prioridad 10, Parametros a la funcion 2
+
 /** Regista Bloques */
 function lapizzeria_block_register() {
     # Valida si Gutenberg NO esta disponible
