@@ -44,7 +44,7 @@ function lapizzeria_block_register() {
         ],
         filemtime( plugin_dir_path( __FILE__ ). 'build/editor.css' )  # Version: Ultima version generada el archivo
     );
-    
+
     # Registra archivo de acceso a Hoja de Estilos (BackEnd & FrontEnd)
     wp_register_style(
         'lapizzeria-backfront-style',                   # Handle: Debe tener un nombre unico
@@ -52,5 +52,25 @@ function lapizzeria_block_register() {
         [],                                             # Dependencies: Librerias requeridas (Ej: jQuery entre muchas otras)
         filemtime( plugin_dir_path( __FILE__ ). 'build/styles.css' )  # Version: Ultima version generada el archivo
     );
+
+    /** Define listado de bloques del Plugin */
+    $blocks = [
+        'lapizzeria/boxes'
+    ];
+
+    /** Recorre y agrega scritps y hojas de estilo registradas a WordPress */
+    foreach( $blocks as $block ) {
+        /** Registra un tipo de bloque.
+         *  Equivale al wp_enqueue_style o wp_enqueue_script de un bloque */
+        register_block_type(
+            $block,     # Block name
+            [           # Argumentos del tipo de bloque
+                'editor-script' => 'lapizzeria-editor-script',      # Scripts para el editor
+                'editor-style'  => 'lapizzeria-editor-style',       # Hoja de Estilos para el editor
+                'style'         => 'lapizzeria-backfront-style'     # Hoja de Estilos compartida para el FrontEnd y el BackEnd
+            ]
+        );
+    }
+
 }
 add_action( 'init', 'lapizzeria_block_register' );
