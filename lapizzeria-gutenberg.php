@@ -34,7 +34,7 @@ add_filter( 'block_categories', 'lapizzeria_block_category_register', 10, 2 );  
 /** Regista Bloques */
 function lapizzeria_block_register() {
     # Valida si Gutenberg NO esta disponible
-    if( !function_exists( 'register_block_type' ) ) {
+    if( ! function_exists( 'register_block_type' ) ) {
         return;
     }
 
@@ -56,7 +56,7 @@ function lapizzeria_block_register() {
         'lapizzeria-editor-style',                      # Handle: Debe tener un nombre unico
         plugins_url( 'build/editor.css' , __FILE__ ),   # File: Archivo que contiene hojas de estilo para los bloques en el editor
         [                                               # Dependencies: Librerias requeridas para la creacion de bloques
-            'wp-edit-block',            # Exclusivamente para el editor de bloques
+            'wp-edit-blocks',           # Exclusivamente para el editor de bloques
         ],
         filemtime( plugin_dir_path( __FILE__ ). 'build/editor.css' )  # Version: Ultima version generada el archivo
     );
@@ -71,18 +71,18 @@ function lapizzeria_block_register() {
 
     /** Define listado de bloques del Plugin */
     $blocks = [
-        'lapizzeria/boxes'
+        'lapizzeria/block-boxes'
     ];
 
-    /** Recorre y agrega scritps y hojas de estilo registradas a WordPress */
+    /** Recorre listado de bloques para agregar scritps y hojas de estilo registradas a WordPress */
     foreach( $blocks as $block ) {
         /** Registra un tipo de bloque.
          *  Equivale al wp_enqueue_style o wp_enqueue_script de un bloque */
         register_block_type(
             $block,     # Block name
             [           # Argumentos del tipo de bloque
-                'editor-script' => 'lapizzeria-editor-script',      # Scripts para el editor
-                'editor-style'  => 'lapizzeria-editor-style',       # Hoja de Estilos para el editor
+                'editor_script' => 'lapizzeria-editor-script',      # Scripts para el editor
+                'editor_style'  => 'lapizzeria-editor-style',       # Hoja de Estilos para el editor
                 'style'         => 'lapizzeria-backfront-style'     # Hoja de Estilos compartida para el FrontEnd y el BackEnd
             ]
         );
