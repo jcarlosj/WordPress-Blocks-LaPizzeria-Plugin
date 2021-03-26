@@ -1,7 +1,7 @@
 const 
     { registerBlockType } = wp.blocks,
     { __ } = wp.i18n,
-    { RichText } = wp.blockEditor;       /** Paso 1: Importar el/los componentes que se utilizarán. */
+    { useBlockProps, RichText } = wp.blockEditor;       /** Paso 1: Importar el/los componentes que se utilizarán. */
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -29,7 +29,10 @@ registerBlockType( 'lapizzeria/block-boxes', {
     },
     edit: ( props ) => {    /** Paso 4: Se obtienen los props destructurados */
         console .log( props );
-        const { attributes: { title, text }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+        
+        const 
+            blockProps = useBlockProps( { className: 'box' } ),
+            { attributes: { title, text }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
 
         /** Paso 3: Crear la función que lea los contenidos. */
         const onChangeTitle = ( newTitle ) => {
@@ -42,7 +45,7 @@ registerBlockType( 'lapizzeria/block-boxes', {
         }
 
         return (
-            <div className="box">
+            <div { ...blockProps }>
                 <h2>
                     <RichText 
                         value={ title }         /** Hará que el campo siempre tenga el valor actual del campo */
@@ -64,10 +67,13 @@ registerBlockType( 'lapizzeria/block-boxes', {
     },
     save: ( props ) => {    /** Paso 7: Leer los contenidos que deseamos guardar usando save(). (Muestra lo que a guardado la BD) */
         console .log( props );
-        const { attributes: { title, text } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+        
+        const 
+            blockProps = useBlockProps .save(), 
+            { attributes: { title, text } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
     
         return (
-            <div className="box">
+            <div { ...blockProps }>
                 <h2>
                     <RichText .Content
                         value={ title }
