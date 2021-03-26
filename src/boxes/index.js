@@ -20,16 +20,25 @@ registerBlockType( 'lapizzeria/block-boxes', {
             type: 'string',
             source: 'html',
             selector: '.box h2'
+        },
+        text : {
+            type: 'string',
+            source: 'html',
+            selector: '.box p'
         }
     },
     edit: ( props ) => {    /** Paso 4: Se obtienen los props destructurados */
         console .log( props );
-        const { attributes: { title }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+        const { attributes: { title, text }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
 
         /** Paso 3: Crear la función que lea los contenidos. */
         const onChangeTitle = ( newTitle ) => {
             console .log( newTitle );
             setAttributes( { title: newTitle } );    /** Paso 6: Guardar el contenido con setAttributes() */
+        }
+        const onChangeText = ( text ) => {
+            console .log( text );
+            setAttributes( { text } );    /** Paso 6: Guardar el contenido con setAttributes() */
         }
 
         return (
@@ -42,12 +51,20 @@ registerBlockType( 'lapizzeria/block-boxes', {
                         // onChange={ ( content ) => setAttributes( { content } ) }      /** Abrevia pasos 3 y 4 */
                     />
                 </h2>
+                <p>
+                    <RichText 
+                        value={ text }         /** Hará que el campo siempre tenga el valor actual del campo */
+                        placeholder={ __( 'Add the text', 'plugin-lapizzeria-bkl' ) }  /** Paso 2: Colocar el/los componentes donde se desean usar. (Mostrar este texto antes de que el usuario haya agregado contenido) */  
+                        onChange={ onChangeText }                                       /** Paso 3: Enlaza función que lee los contenidos del campo RichText. */
+                        // onChange={ ( content ) => setAttributes( { content } ) }      /** Abrevia pasos 3 y 4 */
+                    />
+                </p>
             </div>
         )
     },
     save: ( props ) => {    /** Paso 7: Leer los contenidos que deseamos guardar usando save(). (Muestra lo que a guardado la BD) */
         console .log( props );
-        const { attributes: { title } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+        const { attributes: { title, text } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
     
         return (
             <div className="box">
@@ -56,6 +73,11 @@ registerBlockType( 'lapizzeria/block-boxes', {
                         value={ title }
                     />
                 </h2>
+                <p>
+                    <RichText .Content
+                        value={ text }
+                    />
+                </p>
             </div>
         )
     },
