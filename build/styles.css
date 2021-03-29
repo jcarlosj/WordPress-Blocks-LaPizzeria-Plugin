@@ -1,0 +1,83 @@
+:root {
+    /** Fuentes del sitio */
+    --font__main:    'Open Sans', sans-serif;
+    --font__headers: 'Raleway', sans-serif;
+    /** Corporate colors */
+    --color__red: #A61206;
+    --color__orange: #F19F30;
+    --color__green: #124727;
+
+    /** Colors */
+    --color__white: #FFFFFF;
+    --color__black: #000000;
+    --color__light-gray: #C1C1C1;
+
+    /** Site variables. */
+    --site-width: 1200px;
+    --wide-width: 1240px;
+
+    /** Breakpoints */
+    --small: 600px;
+	--medium: 768px;
+	--large: 1024px;
+	--xlarge: 1240px;
+
+    /** Font sizes */
+    --overall-font-size: 62.5%;      
+}
+
+/** Equivale a la clase .wp-block-columns */
+.block-columns-us {     /** block-columns-us: Agregada a la configuracion del bloque columnas en el Admin de WP */
+    display: grid;
+    margin-left: 0;
+}
+@media ( min-width: 768px ) {
+    .block-columns-us {     
+        grid-template-columns: repeat( auto-fit, minmax( 100px, 1fr ) );
+    }   
+}
+
+.block-columns-us .wp-block-column {
+    display: grid;
+    gap: 0;
+    grid-template-rows: repeat( auto-fit, minmax( 100px, 1fr ) );
+    margin: 0;
+}
+
+/** Equivale al elemento <figure> contenedor de imagenes */
+.block-columns-us .wp-block-image {
+    display: block;
+    height: 24rem;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    overflow: hidden;
+}
+
+.block-columns-us .wp-block-image img {
+    display: block;
+    object-fit: cover;
+    height: 30rem;
+    width: 100%;
+}
+
+/** Equivale al bloque Boxes Box */
+.block-columns-us .wp-block-lapizzeria-block-boxes {
+    align-items: center;
+    display: grid;
+    height: 24rem;
+    margin: 0;
+    padding: 4rem 2rem;
+}
+
+.block-columns-us .wp-block-lapizzeria-block-boxes h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+}
+.block-columns-us .wp-block-lapizzeria-block-boxes p {
+    font-size: 1.4rem;
+    line-height: 1.5;
+}

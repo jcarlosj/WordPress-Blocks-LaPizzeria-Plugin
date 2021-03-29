@@ -11,12 +11,11 @@
 
 .block-editor .editor-styles-wrapper p {
     /* font-size: 1.8rem; */
-    line-height: 5rem;
-    padding: 1rem 6rem;
+    /* line-height: 5rem;
+    padding: 1rem 6rem; */
 }
 
 .block-editor .box {
     height: 24rem;
     padding: 4rem 2rem;
-    text-align: center;
 }
