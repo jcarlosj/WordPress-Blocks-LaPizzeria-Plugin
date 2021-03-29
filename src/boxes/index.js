@@ -29,6 +29,9 @@ registerBlockType( 'lapizzeria/block-boxes', {
         },
         bgColor : {
             type: 'string'
+        },
+        txtColor : {
+            type: 'string'
         }
     },
     edit: ( props ) => {    /** Paso 4: Se obtienen los props destructurados */
@@ -36,7 +39,7 @@ registerBlockType( 'lapizzeria/block-boxes', {
         
         const 
             blockProps = useBlockProps( { className: 'box' } ),
-            { attributes: { title, text, bgColor }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+            { attributes: { title, text, bgColor, txtColor }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
 
         /** Paso 3: Crear la función que lea los contenidos. */
         const onChangeTitle = ( newTitle ) => {
@@ -50,6 +53,10 @@ registerBlockType( 'lapizzeria/block-boxes', {
         const onChangeBackgroundColor = ( bgColor ) => {
             console .log( bgColor );
             setAttributes( { bgColor });
+        }
+        const onChangeTextColor = ( txtColor ) => {
+            console .log( txtColor );
+            setAttributes( { txtColor });
         }
 
         return (
@@ -65,9 +72,19 @@ registerBlockType( 'lapizzeria/block-boxes', {
                             value={ bgColor }
                         />
                     </PanelBody>
+                    <PanelBody
+                        title={ __( 'Text color', 'plugin-lapizzeria-bkl' ) }
+                        initialOpen={ false }    /** Solo se permite que un panel abra automaticamente */
+                    >
+                        <PanelRow>{ __( 'Select text color', 'plugin-lapizzeria-bkl' ) }</PanelRow>
+                        <ColorPalette 
+                            onChange={ onChangeTextColor }
+                            value={ txtColor }
+                        />
+                    </PanelBody>
                 </InspectorControls>
                 <div { ...blockProps } style={{ backgroundColor: bgColor }}>
-                    <h2>
+                    <h2 style={{ color: txtColor }}>
                         <RichText 
                             value={ title }         /** Hará que el campo siempre tenga el valor actual del campo */
                             placeholder={ __( 'Add the title', 'plugin-lapizzeria-bkl' ) }  /** Paso 2: Colocar el/los componentes donde se desean usar. (Mostrar este texto antes de que el usuario haya agregado contenido) */  
@@ -75,7 +92,7 @@ registerBlockType( 'lapizzeria/block-boxes', {
                             // onChange={ ( content ) => setAttributes( { content } ) }      /** Abrevia pasos 3 y 4 */
                         />
                     </h2>
-                    <p>
+                    <p style={{ color: txtColor }}>
                         <RichText 
                             value={ text }         /** Hará que el campo siempre tenga el valor actual del campo */
                             placeholder={ __( 'Add the text', 'plugin-lapizzeria-bkl' ) }  /** Paso 2: Colocar el/los componentes donde se desean usar. (Mostrar este texto antes de que el usuario haya agregado contenido) */  
@@ -92,16 +109,16 @@ registerBlockType( 'lapizzeria/block-boxes', {
         
         const 
             blockProps = useBlockProps .save(), 
-            { attributes: { title, text, bgColor } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+            { attributes: { title, text, bgColor, txtColor } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
     
         return (
             <div { ...blockProps } style={{ backgroundColor: bgColor }}>
-                <h2>
+                <h2 style={{ color: txtColor }}>
                     <RichText .Content
                         value={ title }
                     />
                 </h2>
-                <p>
+                <p style={{ color: txtColor }}>
                     <RichText .Content
                         value={ text }
                     />
