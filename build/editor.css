@@ -1,0 +1,22 @@
+.block-editor {
+    --overall-font-size: 62.5%;
+    font-size: var( --overall-font-size );		/**	variable */
+}
+
+.block-editor .wp-block {
+    /* background-color: coral; */
+    max-width: 1078px;          /** Mismo ancho que la clase main-content en el FrontEnd */
+    width: 95%;
+}
+
+.block-editor .editor-styles-wrapper p {
+    /* font-size: 1.8rem; */
+    line-height: 5rem;
+    padding: 1rem 6rem;
+}
+
+.block-editor .box {
+    height: 24rem;
+    padding: 4rem 2rem;
+    text-align: center;
+}

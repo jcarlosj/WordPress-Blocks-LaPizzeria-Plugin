@@ -108,7 +108,7 @@ registerBlockType( 'lapizzeria/block-boxes', {
         console .log( props );
         
         const 
-            blockProps = useBlockProps .save(), 
+            blockProps = useBlockProps .save( { className: 'box' } ), 
             { attributes: { title, text, bgColor, txtColor } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
     
         return (
