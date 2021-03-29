@@ -1,7 +1,7 @@
 const 
     { registerBlockType } = wp.blocks,
     { __ } = wp.i18n,
-    { useBlockProps, InspectorControls, ColorPalette, RichText } = wp.blockEditor,       /** Paso 1: Importar el/los componentes que se utilizarán. */
+    { useBlockProps, InspectorControls, ColorPalette, RichText, BlockControls, AlignmentToolbar } = wp.blockEditor,       /** Paso 1: Importar el/los componentes que se utilizarán. */
     { PanelBody, PanelRow } = wp.components;
 
 /** Logo */
@@ -32,6 +32,10 @@ registerBlockType( 'lapizzeria/block-boxes', {
         },
         txtColor : {
             type: 'string'
+        },
+        contentAlignment : {
+            type: 'string',
+            default: 'center'
         }
     },
     edit: ( props ) => {    /** Paso 4: Se obtienen los props destructurados */
@@ -39,7 +43,7 @@ registerBlockType( 'lapizzeria/block-boxes', {
         
         const 
             blockProps = useBlockProps( { className: 'box' } ),
-            { attributes: { title, text, bgColor, txtColor }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+            { attributes: { title, text, bgColor, txtColor, contentAlignment }, setAttributes } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
 
         /** Paso 3: Crear la función que lea los contenidos. */
         const onChangeTitle = ( newTitle ) => {
@@ -57,6 +61,12 @@ registerBlockType( 'lapizzeria/block-boxes', {
         const onChangeTextColor = ( txtColor ) => {
             console .log( txtColor );
             setAttributes( { txtColor });
+        }
+
+        /**  */
+        const onChangeAlignContent = ( newLineup ) => {
+            console .log( 'align: ', newLineup );
+            setAttributes( { contentAlignment: newLineup });
         }
 
         return (
@@ -83,7 +93,17 @@ registerBlockType( 'lapizzeria/block-boxes', {
                         />
                     </PanelBody>
                 </InspectorControls>
-                <div { ...blockProps } style={{ backgroundColor: bgColor }}>
+
+                <BlockControls>
+                    <AlignmentToolbar 
+                        onChange={ onChangeAlignContent }
+                    />
+                </BlockControls>
+
+                <div { ...blockProps } style={{ 
+                    backgroundColor: bgColor,
+                    textAlign: contentAlignment
+                }}>
                     <h2 style={{ color: txtColor }}>
                         <RichText 
                             value={ title }         /** Hará que el campo siempre tenga el valor actual del campo */
@@ -109,10 +129,13 @@ registerBlockType( 'lapizzeria/block-boxes', {
         
         const 
             blockProps = useBlockProps .save( { className: 'box' } ), 
-            { attributes: { title, text, bgColor, txtColor } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
+            { attributes: { title, text, bgColor, txtColor, contentAlignment } } = props;    /** Paso 5: Extraer el contenido de los props (Destructurando) */
     
         return (
-            <div { ...blockProps } style={{ backgroundColor: bgColor }}>
+            <div { ...blockProps } style={{ 
+                backgroundColor: bgColor,
+                textAlign: contentAlignment
+            }}>
                 <h2 style={{ color: txtColor }}>
                     <RichText .Content
                         value={ title }
