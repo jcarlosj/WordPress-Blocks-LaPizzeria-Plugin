@@ -88,5 +88,23 @@ function lapizzeria_block_register() {
         );
     }
 
+    /** Registra un bloque dinámico 
+     *  Equivale al wp_enqueue_style o wp_enqueue_script de un bloque */
+    register_block_type(
+        'lapizzeria/menu',     # Block name
+        [           # Argumentos del tipo de bloque
+            'editor_script'     => 'lapizzeria-editor-script',          # Scripts para el editor
+            'editor_style'      => 'lapizzeria-editor-style',           # Hoja de Estilos para el editor
+            'style'             => 'lapizzeria-backfront-style',        # Hoja de Estilos compartida para el FrontEnd y el BackEnd
+            'render_callback'   => 'lapizzeria_specialties_frontend'    # Funcion consulta API para mostrar en el FrontEnd
+        ]
+    );
+
+
 }
 add_action( 'init', 'lapizzeria_block_register' );
+
+/** Obtiene todos los datos de especialidades para mostrarlos en el FrontEnd */
+function lapizzeria_specialties_frontend() {
+    return '<h1>En el FrontEnd desde PHP</h1>';
+}
