@@ -2,7 +2,8 @@ const
     { registerBlockType } = wp.blocks,
     { __ } = wp.i18n,
     { withSelect } = wp.data,
-    { RichText } = wp.blockEditor;
+    { RichText, InspectorControls } = wp.blockEditor,
+    { PanelBody, PanelRow, RangeControl } = wp.components;
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -18,17 +19,38 @@ registerBlockType( 'lapizzeria/menu', {
     description: __( 'Block to display specialties menu', 'plugin-lapizzeria-bkl' ),
     /** Consulta a la API */
     edit: withSelect( ( select ) => {   
+
+        const onChangeNumberOfPublications = nPublications  => {
+            console .log( nPublications );
+        }
+
         return {
-            specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties' )      //  Peticion a la API REST WP
+            specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties' ),     //  Peticion a la API REST WP
+            onChangeNumberOfPublications
         };
     })
     /** Data de la API */
-    ( ( { specialties } ) => {     
+    ( ( { specialties, onChangeNumberOfPublications } ) => {        //  Props
 
         console .log( specialties );
 
         return (
             <>
+                <InspectorControls>
+                    <PanelBody
+                        title={ __( 'Number of posts', 'plugin-lapizzeria-bkl' ) }
+                        initialOpen={ true }    /** Solo se permite que un panel abra automaticamente */
+                    >
+                        <PanelRow>{ __( 'Select number of specialties', 'plugin-lapizzeria-bkl' ) }</PanelRow>
+                        <RangeControl 
+                            onChange={ onChangeNumberOfPublications }
+                            min={ 2 }
+                            max={ 10 }
+                            value={ 2 }
+                        />
+                    </PanelBody>
+                </InspectorControls>
+
                 <h2>{ __( 'Our specialties', 'plugin-lapizzeria-bkl' ) }</h2>
                 {   /** Validamos si la data esta disponible */
                     ( specialties ) &&
