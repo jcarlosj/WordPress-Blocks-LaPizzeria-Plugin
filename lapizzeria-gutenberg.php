@@ -96,7 +96,7 @@ function lapizzeria_block_register() {
             'editor_script'     => 'lapizzeria-editor-script',          # Scripts para el editor
             'editor_style'      => 'lapizzeria-editor-style',           # Hoja de Estilos para el editor
             'style'             => 'lapizzeria-backfront-style',        # Hoja de Estilos compartida para el FrontEnd y el BackEnd
-            'render_callback'   => 'lapizzeria_specialties_frontend'    # Funcion consulta API para mostrar en el FrontEnd
+            'render_callback'   => 'lapizzeria_specialties_frontend'    # Funcion consulta API para mostrar en el FrontEnd (CallBack)
         ]
     );
 
@@ -104,7 +104,51 @@ function lapizzeria_block_register() {
 }
 add_action( 'init', 'lapizzeria_block_register' );
 
-/** Obtiene todos los datos de especialidades para mostrarlos en el FrontEnd */
+/** Obtiene todos los datos de especialidades para mostrarlos en el FrontEnd 
+ *  NOTA: No usar WP Query dentro de una funcion callback
+*/
 function lapizzeria_specialties_frontend() {
-    return '<h1>En el FrontEnd desde PHP</h1>';
+    
+    $args = array(
+        'post_type'     => 'specialties',
+        'post_status'   => 'publish',
+        'numberposts'   => 10
+    );
+
+    $specialties = wp_get_recent_posts( $args );    #  Obtenemos datos del Query
+
+    #   Verifica que se obtengan registros
+    if( count( $specialties ) == 0 ) {
+        return __( 'No specialties', 'plugin-lapizzeria-bkl' );
+    }
+
+    $template = "";
+    $list_of_publications = "";
+
+    foreach ( $specialties as $key => $specialty ) {
+        $post = get_post( $specialty[ 'ID' ]);
+        // echo '<pre>';   print_r( $post );   echo '</pre>';
+        
+        setup_postdata( $post );    #   Configure los datos de publicación globales.
+
+        $list_of_publications .= sprintf( '
+                <li>
+                    <h3 className="specialty-title">%1$s</h3>
+                </li>
+            ',
+            get_the_title( $post ),
+        );
+        
+        wp_reset_postdata();        #   Después de recorrer una consulta separada, esta función restaura $ post global a la publicación actual en la consulta principal.
+    }
+
+    $template = "
+        <h2>" .__( 'Our specialties', 'plugin-lapizzeria-bkl' ). "</h2>
+        <ul className='our-menu'>
+            " .$list_of_publications. "
+        </ul>
+    ";
+
+    return $template;
+
 }
