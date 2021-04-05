@@ -133,10 +133,20 @@ function lapizzeria_specialties_frontend() {
 
         $list_of_publications .= sprintf( '
                 <li>
-                    <h3 className="specialty-title">%1$s</h3>
+                    %1$s
+                    <header class="specialty-header">
+                        <h3 class="specialty-title">%2$s</h3>
+                        <p class="specialty-price">$ %3$s</p>
+                    </header>
+                    <div class="specialty-content">
+                        <p>%4$s</p>
+                    </div>
                 </li>
             ',
+            get_the_post_thumbnail( $post, 'specialties' ),
             get_the_title( $post ),
+            get_post_meta( $post -> ID, 'price', true ),
+            get_the_content( $post ) 
         );
         
         wp_reset_postdata();        #   Después de recorrer una consulta separada, esta función restaura $ post global a la publicación actual en la consulta principal.
