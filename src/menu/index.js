@@ -1,7 +1,8 @@
 const 
     { registerBlockType } = wp.blocks,
     { __ } = wp.i18n,
-    { withSelect } = wp.data;
+    { withSelect } = wp.data,
+    { RichText } = wp.blockEditor;
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -18,17 +19,40 @@ registerBlockType( 'lapizzeria/menu', {
     /** Consulta a la API */
     edit: withSelect( ( select ) => {   
         return {
-            specialties: select( "core" ) .getEntityRecords( 'postType', 'specialties' )      //  Peticion a la API REST WP
+            specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties' )      //  Peticion a la API REST WP
         };
     })
     /** Data de la API */
     ( ( { specialties } ) => {     
+
         console .log( specialties );
 
         return (
             <>
-                <h1>Se ve en Gutenberg (el editor)</h1>
-                <p>Ver en consola del navegador la data</p>
+                <h2>{ __( 'Our specialties', 'plugin-lapizzeria-bkl' ) }</h2>
+                {   /** Validamos si la data esta disponible */
+                    ( specialties ) &&
+
+                        <ul className="our-menu">
+                            { specialties .map( specialty => (
+                                <li>
+                                    <img src={ specialty .featured_image_url } />
+                                    <header className="specialty-header">
+                                        <h3 className="specialty-title">{ specialty .title .rendered }</h3>
+                                        <p className="specialty-price">$ { specialty .price }</p>
+                                    </header>
+                                    <div className="specialty-content">
+                                        <p>
+                                        <RichText .Content 
+                                            value={ specialty .content .rendered .substring( 0, 180 ) }
+                                        />
+                                        </p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+
+                }
             </>
         );
     }),
