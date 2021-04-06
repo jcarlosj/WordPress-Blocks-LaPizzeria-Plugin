@@ -1,5 +1,4 @@
 .block-editor {
-    --overall-font-size: 62.5%;
     font-size: var( --overall-font-size );		/**	variable */
 }
 
@@ -19,3 +18,5 @@
     height: 24rem;
     padding: 4rem 2rem;
 }
+
+/** Bloque Menu Specialties */

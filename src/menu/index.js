@@ -65,30 +65,35 @@ registerBlockType( 'lapizzeria/menu', {
                     </PanelBody>
                 </InspectorControls>
 
-                <h2>{ __( 'Our specialties', 'plugin-lapizzeria-bkl' ) }</h2>
-                {   /** Validamos si la data esta disponible */
-                    ( specialties ) &&
+                <section className="menu">
 
-                        <ul className="our-menu">
-                            { specialties .map( specialty => (
-                                <li>
-                                    <img src={ specialty .featured_image_url } />
-                                    <header className="specialty-header">
-                                        <h3 className="specialty-title">{ specialty .title .rendered }</h3>
-                                        <p className="specialty-price">$ { specialty .price }</p>
-                                    </header>
-                                    <div className="specialty-content">
-                                        <p>
-                                        <RichText .Content 
-                                            value={ specialty .content .rendered .substring( 0, 180 ) }
-                                        />
-                                        </p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                    <h2 className="menu-title">{ __( 'Our specialties', 'plugin-lapizzeria-bkl' ) }</h2>
+                    {   /** Validamos si la data esta disponible */
+                        ( specialties ) &&
 
-                }
+                            <ul className="menu-list">
+                                { specialties .map( specialty => (
+                                    <li className="menu-item specialty">
+                                        <img src={ specialty .featured_image_url } />
+                                        <header className="specialty-header">
+                                            <h3 className="specialty-title">{ specialty .title .rendered }</h3>
+                                            <p className="specialty-price">$ { specialty .price }</p>
+                                        </header>
+                                        <div className="specialty-content">
+                                            {/** Removemos el tag p pues esta contenido en el valor de "specialty .content .rendered" */}
+                                                <RichText .Content 
+                                                    value={ specialty .content .rendered .substring( 0, 180 ) }
+                                                />
+                                            
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                    }
+
+                </section>    
+
             </>
         );
     }),

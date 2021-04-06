@@ -81,3 +81,62 @@
     font-size: 1.4rem;
     line-height: 1.5;
 }
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+/** Bloque Menu Specialties */
+.menu .menu-title {
+    color: var( --color__red );
+    font-family: var( --font__headers );
+    font-size: 30px;
+    font-weight: 700;
+    text-align: left;
+}
+.menu .menu-list li {
+    margin-bottom: 2rem;
+}
+@media ( min-width: 768px ) {
+    .menu .menu-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .menu .menu-list li {
+        flex: 0 0 calc( 50% - 2rem );
+    }
+}
+
+.specialty .specialty-header {
+    align-items: center;
+    border-bottom: 1px solid #DFDFDD;
+    display: flex;
+    justify-content: space-between;
+    padding: .7rem 1.3rem;
+}
+.specialty .specialty-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+} 
+.specialty .specialty-price {
+    color: var( --color__orange );
+    font-family: var( --font__headers );
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+} 
+.specialty .specialty-content p {
+    color: #3D3D3D;
+    font-family: var( --font__headers );
+    font-size: 14px;
+    line-height: 2;
+    padding: 0 1rem;
+    text-align: left;
+}

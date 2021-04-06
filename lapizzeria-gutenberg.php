@@ -132,7 +132,7 @@ function lapizzeria_specialties_frontend() {
         setup_postdata( $post );    #   Configure los datos de publicación globales.
 
         $list_of_publications .= sprintf( '
-                <li>
+                <li class="menu-item specialty">
                     %1$s
                     <header class="specialty-header">
                         <h3 class="specialty-title">%2$s</h3>
@@ -143,7 +143,7 @@ function lapizzeria_specialties_frontend() {
                     </div>
                 </li>
             ',
-            get_the_post_thumbnail( $post, 'specialties' ),
+            get_the_post_thumbnail( $post, 'specialties-landscape' ),
             get_the_title( $post ),
             get_post_meta( $post -> ID, 'price', true ),
             get_the_content( $post ) 
@@ -153,10 +153,12 @@ function lapizzeria_specialties_frontend() {
     }
 
     $template = "
-        <h2>" .__( 'Our specialties', 'plugin-lapizzeria-bkl' ). "</h2>
-        <ul className='our-menu'>
-            " .$list_of_publications. "
-        </ul>
+        <section class='menu'>
+            <h2 class='menu-title'>" .__( 'Our specialties', 'plugin-lapizzeria-bkl' ). "</h2>
+            <ul class='menu-list'>
+                " .$list_of_publications. "
+            </ul>
+        </section>
     ";
 
     return $template;
