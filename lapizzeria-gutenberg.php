@@ -107,12 +107,19 @@ add_action( 'init', 'lapizzeria_block_register' );
 /** Obtiene todos los datos de especialidades para mostrarlos en el FrontEnd 
  *  NOTA: No usar WP Query dentro de una funcion callback
 */
-function lapizzeria_specialties_frontend() {
+function lapizzeria_specialties_frontend( $attributes ) {
     
+    /** NOTA: Cualquier expresion: echo, var_dump o print_r generará el siguiente mensaje
+     *        "Fallo al actualizar. Las respuesta no es una respuesta JSON válida." con 
+     *        la consecuencia que ningun dato proporcionado por los Paneles se guardarán
+     */
+
+    // echo '<pre>';   print_r( $attributes );     echo '</pre>';      #   Debug: Solo para Testing
+
     $args = array(
         'post_type'     => 'specialties',
         'post_status'   => 'publish',
-        'numberposts'   => 10
+        'numberposts'   => $attributes[ 'numberOfPosts' ]
     );
 
     $specialties = wp_get_recent_posts( $args );    #  Obtenemos datos del Query
@@ -127,7 +134,7 @@ function lapizzeria_specialties_frontend() {
 
     foreach ( $specialties as $key => $specialty ) {
         $post = get_post( $specialty[ 'ID' ]);
-        // echo '<pre>';   print_r( $post );   echo '</pre>';
+        // echo '<pre>';   print_r( $post );   echo '</pre>';       #   Debug: Solo para Testing
         
         #   Verifica que exista imagen en el post de lo contrario no la publica
         if( get_the_post_thumbnail( $post, 'specialties-landscape' ) != '' ) {
@@ -152,9 +159,10 @@ function lapizzeria_specialties_frontend() {
                 get_the_content( $post ) 
             );
 
+            wp_reset_postdata();        #   Después de recorrer una consulta separada, esta función restaura $ post global a la publicación actual en la consulta principal.
+
         }
-        
-        wp_reset_postdata();        #   Después de recorrer una consulta separada, esta función restaura $ post global a la publicación actual en la consulta principal.
+    
     }
 
     $template = "
@@ -167,5 +175,4 @@ function lapizzeria_specialties_frontend() {
     ";
 
     return $template;
-
 }

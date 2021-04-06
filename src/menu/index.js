@@ -19,23 +19,25 @@ registerBlockType( 'lapizzeria/menu', {
     description: __( 'Block to display specialties menu', 'plugin-lapizzeria-bkl' ),
     attributes: {
         numberOfPosts: {
-            type: 'number',
-            default: 4
+            type: 'number'
         }
     },
     /** Consulta a la API */
     edit: withSelect( ( select, props ) => {
         
-        const { attributes: { numberOfPosts }, setAttributes } = props;
+        const 
+            { attributes: { numberOfPosts }, setAttributes } = props;
+
+        console .log( 'numberOfPosts', numberOfPosts );
 
         const onChangeNumberOfPublications = nPublications  => {
             console .log( nPublications );
-            setAttributes( { numberOfPosts: parseInt( nPublications ) } );
+            setAttributes({ numberOfPosts: nPublications } );
         }
 
         return {
             specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', {
-                per_page: numberOfPosts    //  Peticion a la API REST WP de la cantidad de post que deseamos 
+                per_page: numberOfPosts || 4   //  Peticion a la API REST WP de la cantidad de post que deseamos 
             } ),     
             onChangeNumberOfPublications,
             props
@@ -47,6 +49,7 @@ registerBlockType( 'lapizzeria/menu', {
         const { attributes: { numberOfPosts } } = props;
 
         console .log( specialties );
+        console .log( 'numberOfPosts', numberOfPosts );
 
         return (
             <>
@@ -60,7 +63,7 @@ registerBlockType( 'lapizzeria/menu', {
                             onChange={ onChangeNumberOfPublications }
                             min={ 2 }
                             max={ 10 }
-                            value={ numberOfPosts }
+                            value={ numberOfPosts || 4 }
                         />
                     </PanelBody>
                 </InspectorControls>
