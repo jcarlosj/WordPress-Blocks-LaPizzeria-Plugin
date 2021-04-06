@@ -20,13 +20,16 @@ registerBlockType( 'lapizzeria/menu', {
     attributes: {
         numberOfPosts: {
             type: 'number'
+        },
+        selectedCategory: {
+            type: 'number'
         }
     },
     /** Consulta a la API */
     edit: withSelect( ( select, props ) => {
         
         const 
-            { attributes: { numberOfPosts }, setAttributes } = props;
+            { attributes: { numberOfPosts, selectedCategory }, setAttributes } = props;
 
         console .log( 'numberOfPosts', numberOfPosts );
 
@@ -35,31 +38,41 @@ registerBlockType( 'lapizzeria/menu', {
             setAttributes({ numberOfPosts: nPublications } );
         }
 
+        const onChangeCategory = ( selectedCategory ) => {
+            console .log( selectedCategory );
+            setAttributes({ selectedCategory } );
+        }
+
         return {
             categories: select( 'core' ) .getEntityRecords( 'taxonomy', 'lapizzeria-category-menu' ),
             specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', {
-                per_page: numberOfPosts || 4   //  Peticion a la API REST WP de la cantidad de post que deseamos 
+                'api-category-menu': selectedCategory,      //  rest_base de la taxonomia
+                per_page: numberOfPosts || 4                //  Peticion a la API REST WP de la cantidad de post que deseamos 
             } ),     
             onChangeNumberOfPublications,
+            onChangeCategory,
             props
         };
     })
     /** Data de la API */
-    ( ( { categories, specialties, onChangeNumberOfPublications, props } ) => {        //  Props
+    ( ( { categories, specialties, onChangeNumberOfPublications, onChangeCategory, props } ) => {        //  Props
 
-        const { attributes: { numberOfPosts } } = props;
+        const { attributes: { numberOfPosts, selectedCategory } } = props;
 
         console .log( specialties );
         console .log( categories );
         console .log( 'numberOfPosts', numberOfPosts );
         
         const getCategories = () => {
+
+            const opcionDefault = [{ label: 'Todos', value: '' }];
+
             categories .forEach( category => {
                 category[ 'label' ] = category .name;
                 category[ 'value' ] = category .id;
             });
 
-            return categories;
+            return [ ...opcionDefault, ...categories ];
         }
 
         console .log( getCategories() );
@@ -87,6 +100,8 @@ registerBlockType( 'lapizzeria/menu', {
                         <PanelRow>{ __( 'Select category', 'plugin-lapizzeria-bkl' ) }</PanelRow>
                         <SelectControl 
                             options={ getCategories() }
+                            onChange={ onChangeCategory }
+                            value={ selectedCategory }
                         />
                     </PanelBody>
 
