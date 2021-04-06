@@ -3,7 +3,7 @@ const
     { __ } = wp.i18n,
     { withSelect } = wp.data,
     { RichText, InspectorControls } = wp.blockEditor,
-    { PanelBody, PanelRow, RangeControl, SelectControl } = wp.components;
+    { PanelBody, PanelRow, RangeControl, SelectControl, TextControl } = wp.components;
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -23,13 +23,17 @@ registerBlockType( 'lapizzeria/menu', {
         },
         selectedCategory: {
             type: 'number'
+        },
+        titleBlock: {
+            type: 'string',
+            default: 'Title Block'
         }
     },
     /** Consulta a la API */
     edit: withSelect( ( select, props ) => {
         
         const 
-            { attributes: { numberOfPosts, selectedCategory }, setAttributes } = props;
+            { attributes: { numberOfPosts, selectedCategory, titleBlock }, setAttributes } = props;
 
         console .log( 'numberOfPosts', numberOfPosts );
 
@@ -43,6 +47,11 @@ registerBlockType( 'lapizzeria/menu', {
             setAttributes({ selectedCategory } );
         }
 
+        const onChangeTitleBlock = title => {
+            console .log( title );
+            setAttributes({ titleBlock: title } );
+        }
+
         return {
             categories: select( 'core' ) .getEntityRecords( 'taxonomy', 'lapizzeria-category-menu' ),
             specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', {
@@ -51,13 +60,15 @@ registerBlockType( 'lapizzeria/menu', {
             } ),     
             onChangeNumberOfPublications,
             onChangeCategory,
+            onChangeTitleBlock,
             props
         };
     })
     /** Data de la API */
-    ( ( { categories, specialties, onChangeNumberOfPublications, onChangeCategory, props } ) => {        //  Props
+    ( ( { categories, specialties, onChangeNumberOfPublications, onChangeCategory, onChangeTitleBlock, props } ) => {        //  Props
 
-        const { attributes: { numberOfPosts, selectedCategory } } = props;
+        const { attributes: { numberOfPosts, selectedCategory, titleBlock } } = props;
+        let title = '';
 
         console .log( specialties );
         console .log( categories );
@@ -104,12 +115,22 @@ registerBlockType( 'lapizzeria/menu', {
                             value={ selectedCategory }
                         />
                     </PanelBody>
+                    <PanelBody
+                        title={ __( 'Title', 'plugin-lapizzeria-bkl' ) }
+                        initialOpen={ false }    /** Solo se permite que un panel abra automaticamente */
+                    >
+                        <PanelRow>{ __( 'Title for the block', 'plugin-lapizzeria-bkl' ) }</PanelRow>
+                        <TextControl 
+                            onChange={ onChangeTitleBlock }
+                            value={ titleBlock }
+                        />
+                    </PanelBody>
 
                 </InspectorControls>
 
                 <section className="menu">
 
-                    <h2 className="menu-title">{ __( 'Our specialties', 'plugin-lapizzeria-bkl' ) }</h2>
+                    <h2 className="menu-title">{ titleBlock }</h2>
                     {   /** Validamos si la data esta disponible */
                         ( specialties ) &&
 
