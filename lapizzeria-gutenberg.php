@@ -129,25 +129,30 @@ function lapizzeria_specialties_frontend() {
         $post = get_post( $specialty[ 'ID' ]);
         // echo '<pre>';   print_r( $post );   echo '</pre>';
         
-        setup_postdata( $post );    #   Configure los datos de publicación globales.
+        #   Verifica que exista imagen en el post de lo contrario no la publica
+        if( get_the_post_thumbnail( $post, 'specialties-landscape' ) != '' ) {
+        
+            setup_postdata( $post );    #   Configure los datos de publicación globales.
 
-        $list_of_publications .= sprintf( '
-                <li class="menu-item specialty">
-                    %1$s
-                    <header class="specialty-header">
-                        <h3 class="specialty-title">%2$s</h3>
-                        <p class="specialty-price">$ %3$s</p>
-                    </header>
-                    <div class="specialty-content">
-                        <p>%4$s</p>
-                    </div>
-                </li>
-            ',
-            get_the_post_thumbnail( $post, 'specialties-landscape' ),
-            get_the_title( $post ),
-            get_post_meta( $post -> ID, 'price', true ),
-            get_the_content( $post ) 
-        );
+            $list_of_publications .= sprintf( '
+                    <li class="menu-item specialty">
+                        %1$s
+                        <header class="specialty-header">
+                            <h3 class="specialty-title">%2$s</h3>
+                            <p class="specialty-price">$ %3$s</p>
+                        </header>
+                        <div class="specialty-content">
+                            <p>%4$s</p>
+                        </div>
+                    </li>
+                ',
+                get_the_post_thumbnail( $post, 'specialties-landscape' ),
+                get_the_title( $post ),
+                get_post_meta( $post -> ID, 'price', true ),
+                get_the_content( $post ) 
+            );
+
+        }
         
         wp_reset_postdata();        #   Después de recorrer una consulta separada, esta función restaura $ post global a la publicación actual en la consulta principal.
     }
