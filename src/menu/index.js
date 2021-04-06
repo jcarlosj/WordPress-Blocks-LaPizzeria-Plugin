@@ -3,7 +3,7 @@ const
     { __ } = wp.i18n,
     { withSelect } = wp.data,
     { RichText, InspectorControls } = wp.blockEditor,
-    { PanelBody, PanelRow, RangeControl } = wp.components;
+    { PanelBody, PanelRow, RangeControl, SelectControl } = wp.components;
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -36,6 +36,7 @@ registerBlockType( 'lapizzeria/menu', {
         }
 
         return {
+            categories: select( 'core' ) .getEntityRecords( 'taxonomy', 'lapizzeria-category-menu' ),
             specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', {
                 per_page: numberOfPosts || 4   //  Peticion a la API REST WP de la cantidad de post que deseamos 
             } ),     
@@ -44,16 +45,29 @@ registerBlockType( 'lapizzeria/menu', {
         };
     })
     /** Data de la API */
-    ( ( { specialties, onChangeNumberOfPublications, props } ) => {        //  Props
+    ( ( { categories, specialties, onChangeNumberOfPublications, props } ) => {        //  Props
 
         const { attributes: { numberOfPosts } } = props;
 
         console .log( specialties );
+        console .log( categories );
         console .log( 'numberOfPosts', numberOfPosts );
+        
+        const getCategories = () => {
+            categories .forEach( category => {
+                category[ 'label' ] = category .name;
+                category[ 'value' ] = category .id;
+            });
+
+            return categories;
+        }
+
+        console .log( getCategories() );
 
         return (
             <>
                 <InspectorControls>
+                    
                     <PanelBody
                         title={ __( 'Number of posts', 'plugin-lapizzeria-bkl' ) }
                         initialOpen={ true }    /** Solo se permite que un panel abra automaticamente */
@@ -66,6 +80,16 @@ registerBlockType( 'lapizzeria/menu', {
                             value={ numberOfPosts || 4 }
                         />
                     </PanelBody>
+                    <PanelBody
+                        title={ __( 'Category', 'plugin-lapizzeria-bkl' ) }
+                        initialOpen={ false }    /** Solo se permite que un panel abra automaticamente */
+                    >
+                        <PanelRow>{ __( 'Select category', 'plugin-lapizzeria-bkl' ) }</PanelRow>
+                        <SelectControl 
+                            options={ getCategories() }
+                        />
+                    </PanelBody>
+
                 </InspectorControls>
 
                 <section className="menu">
