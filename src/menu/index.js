@@ -71,23 +71,26 @@ registerBlockType( 'lapizzeria/menu', {
             blockProps = useBlockProps( { className: 'specialty-card' } ),
             { attributes: { numberOfPosts, selectedCategory, titleBlock } } = props;
 
+        let categoryList = [{ label: __( 'Loading', 'plugin-lapizzeria-bkl' ), value: '' }];;
+
         console .log( specialties );
         console .log( categories );
         console .log( 'numberOfPosts', numberOfPosts );
-        
-        const getCategories = () => {
 
-            const opcionDefault = [{ label: 'Todos', value: '' }];
+        if( categories ) {
+            const optionDefault = [{ label: __( 'All', 'plugin-lapizzeria-bkl' ), value: '' }];
 
-            categories .forEach( category => {
-                category[ 'label' ] = category .name;
-                category[ 'value' ] = category .id;
+            const availableCategories = categories .map( category => {
+                return {
+                    label: category .name, 
+                    value: category .id 
+                }
             });
 
-            return [ ...opcionDefault, ...categories ];
-        }
+            categoryList = [ ...optionDefault, ...availableCategories ];
 
-        console .log( getCategories() );
+            console .log( categoryList );
+        }
 
         return (
             <div { ...blockProps }>
@@ -111,7 +114,7 @@ registerBlockType( 'lapizzeria/menu', {
                     >
                         <PanelRow>{ __( 'Select category', 'plugin-lapizzeria-bkl' ) }</PanelRow>
                         <SelectControl 
-                            options={ getCategories() }
+                            options={ categoryList }
                             onChange={ onChangeCategory }
                             value={ selectedCategory }
                         />
