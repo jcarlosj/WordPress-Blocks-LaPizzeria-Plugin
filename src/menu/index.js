@@ -2,7 +2,7 @@ const
     { registerBlockType } = wp.blocks,
     { __ } = wp.i18n,
     { withSelect } = wp.data,
-    { RichText, InspectorControls } = wp.blockEditor,
+    { useBlockProps, RichText, InspectorControls } = wp.blockEditor,
     { PanelBody, PanelRow, RangeControl, SelectControl, TextControl } = wp.components;
 
 /** Logo */
@@ -33,7 +33,7 @@ registerBlockType( 'lapizzeria/menu', {
     edit: withSelect( ( select, props ) => {
         
         const 
-            { attributes: { numberOfPosts, selectedCategory, titleBlock }, setAttributes } = props;
+            { attributes: { numberOfPosts, selectedCategory }, setAttributes } = props;
 
         console .log( 'numberOfPosts', numberOfPosts );
 
@@ -67,8 +67,9 @@ registerBlockType( 'lapizzeria/menu', {
     /** Data de la API */
     ( ( { categories, specialties, onChangeNumberOfPublications, onChangeCategory, onChangeTitleBlock, props } ) => {        //  Props
 
-        const { attributes: { numberOfPosts, selectedCategory, titleBlock } } = props;
-        let title = '';
+        const 
+            blockProps = useBlockProps( { className: 'specialty-card' } ),
+            { attributes: { numberOfPosts, selectedCategory, titleBlock } } = props;
 
         console .log( specialties );
         console .log( categories );
@@ -89,7 +90,7 @@ registerBlockType( 'lapizzeria/menu', {
         console .log( getCategories() );
 
         return (
-            <>
+            <div { ...blockProps }>
                 <InspectorControls>
                     
                     <PanelBody
@@ -157,10 +158,12 @@ registerBlockType( 'lapizzeria/menu', {
 
                 </section>    
 
-            </>
+            </div>
         );
     }),
     save: () => {    
+        const blockProps = useBlockProps .save( { className: 'specialty-card' } );
+
         return null;    /** Se retorna null esperando que Gutenberg ejecute la funcion en el 'render_callback' del registro del bloque en PHP */
     },
 } );
