@@ -3,7 +3,8 @@ const
     { __ } = wp.i18n,
     { withSelect } = wp.data,
     { useBlockProps, RichText, InspectorControls } = wp.blockEditor,
-    { PanelBody, PanelRow, RangeControl, SelectControl, TextControl } = wp.components;
+    { PanelBody, PanelRow, RangeControl, SelectControl, TextControl } = wp.components,
+    { useState, useEffect } = wp.element;
 
 /** Logo */
 import { ReactComponent as Logo } from '../logo.svg';
@@ -26,25 +27,63 @@ registerBlockType( 'lapizzeria/menu', {
         },
         titleBlock: {
             type: 'string',
-            default: 'Title Block'
         }
     },
     /** Consulta a la API */
     edit: withSelect( ( select, props ) => {
         
         const 
-            { attributes: { numberOfPosts, selectedCategory }, setAttributes } = props;
+            { attributes: { numberOfPosts, selectedCategory, titleBlock }, setAttributes } = props,
+            defaultPostNumber = 4,
+            [ paramsSpecialties, setParamsSpecialties ] = useState({
+                per_page: numberOfPosts || defaultPostNumber    //  Peticion a la API REST WP de la cantidad de post que deseamos 
+            });
+
+        useEffect( () => {
+            //  Usados para resolver el valor indefinido al iniciar el componente
+            setAttributes({ numberOfPosts: defaultPostNumber });   
+            setAttributes({ titleBlock: __( 'Title Block', 'plugin-lapizzeria-bkl' )});
+        }, [] );
 
         console .log( 'numberOfPosts', numberOfPosts );
+        console .log( 'selectedCategory', selectedCategory );
+        console .log( 'titleBlock', titleBlock );
+        console .log( 'params', paramsSpecialties );
 
         const onChangeNumberOfPublications = nPublications  => {
             console .log( nPublications );
             setAttributes({ numberOfPosts: nPublications } );
+
+            /** Actualiza State */
+            setParamsSpecialties({
+                ...paramsSpecialties,                                       // Debemos agregar el estado actual 
+                per_page: nPublications       // rest_base de la taxonomia (es decir: 'api-category-menu' es el endpoint de acceso)
+            });
         }
 
         const onChangeCategory = ( selectedCategory ) => {
             console .log( selectedCategory );
             setAttributes({ selectedCategory } );
+            
+            if( selectedCategory == '' ) {
+                /** Actualiza State */
+                setParamsSpecialties({
+                    ...paramsSpecialties,                                       // Debemos agregar el estado actual 
+                    [ 'api-category-menu' ]: undefined       // rest_base de la taxonomia (es decir: 'api-category-menu' es el endpoint de acceso)
+                });    
+
+                return;
+            }
+            
+            /** Actualiza State */
+            setParamsSpecialties({
+                ...paramsSpecialties,                                       // Debemos agregar el estado actual 
+                [ 'api-category-menu' ]: parseInt( selectedCategory )       // rest_base de la taxonomia (es decir: 'api-category-menu' es el endpoint de acceso)
+            });
+
+            console .log( paramsSpecialties );
+
+            return;
         }
 
         const onChangeTitleBlock = title => {
@@ -54,10 +93,7 @@ registerBlockType( 'lapizzeria/menu', {
 
         return {
             categories: select( 'core' ) .getEntityRecords( 'taxonomy', 'lapizzeria-category-menu' ),
-            specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', {
-                'api-category-menu': selectedCategory,      //  rest_base de la taxonomia
-                per_page: numberOfPosts || 4                //  Peticion a la API REST WP de la cantidad de post que deseamos 
-            } ),     
+            specialties: select( 'core' ) .getEntityRecords( 'postType', 'specialties', paramsSpecialties ),     
             onChangeNumberOfPublications,
             onChangeCategory,
             onChangeTitleBlock,
@@ -71,15 +107,17 @@ registerBlockType( 'lapizzeria/menu', {
             blockProps = useBlockProps( { className: 'specialty-card' } ),
             { attributes: { numberOfPosts, selectedCategory, titleBlock } } = props;
 
-        let categoryList = [{ label: __( 'Loading', 'plugin-lapizzeria-bkl' ), value: '' }];;
+        let categoryList = [{ label: __( 'Loading...', 'plugin-lapizzeria-bkl' ), value: '' }];;
 
         console .log( specialties );
         console .log( categories );
         console .log( 'numberOfPosts', numberOfPosts );
 
+        /** Verifica que existan categorias asociadas al post especialidades */
         if( categories ) {
             const optionDefault = [{ label: __( 'All', 'plugin-lapizzeria-bkl' ), value: '' }];
 
+            /** Mapea la data para crear los valores del selector de categorias */
             const availableCategories = categories .map( category => {
                 return {
                     label: category .name, 
@@ -88,8 +126,8 @@ registerBlockType( 'lapizzeria/menu', {
             });
 
             categoryList = [ ...optionDefault, ...availableCategories ];
-
             console .log( categoryList );
+            
         }
 
         return (
