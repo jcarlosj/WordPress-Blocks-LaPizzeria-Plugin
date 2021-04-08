@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       La Pizzeria Gutenberg Blocks
+ * Plugin Name:       La Pizzeria: Gutenberg Blocks
  * Plugin URI:        
  * Description:       Bloques nativos de Gutenberg para La Pizzería
  * Version:           1.0.0
@@ -116,17 +116,26 @@ function lapizzeria_specialties_frontend( $attributes ) {
 
     // echo '<pre>';   print_r( $attributes );     echo '</pre>';      #   Debug: Solo para Testing
 
+    /** Verifica si $attributes[ 'numberOfPosts' ] existe. En caso de no existir asignara un valor por defecto */
+    $amount_to_show = $attributes[ 'numberOfPosts' ] ? $attributes[ 'numberOfPosts' ] : 4;
+    $tax_query = array();
+
+    # Verifica si $attributes[ 'selectedCategory' ] existe.
+    if( isset( $attributes[ 'selectedCategory' ] ) ) {
+        
+        /** Agrega caracteristicas al Query para consultar por categoria */
+        $tax_query[] = array(
+            'taxonomy'  => 'lapizzeria-category-menu',          //  rest_base
+            'terms'     => $attributes[ 'selectedCategory' ],   //  ID de la categoria 
+            'field'     => 'term_id'                            //  Campo que deseamos filtrar
+        );
+    }
+
     $args = array(
         'post_type'     => 'specialties',
         'post_status'   => 'publish',
-        'numberposts'   => $attributes[ 'numberOfPosts' ],
-        'tax_query'     => array(       //  Consulta por taxonomia
-            array(
-                'taxonomy'  => 'lapizzeria-category-menu',                 //  rest_base
-                'terms'     => $attributes[ 'selectedCategory' ],   //  ID de la categoria 
-                'field'     => 'term_id'                            //  Campo que deseamos filtrar
-            )
-        )
+        'numberposts'   => $amount_to_show,
+        'tax_query'     => $tax_query       //  Consulta por taxonomia
     );
 
     $specialties = wp_get_recent_posts( $args );    #  Obtenemos datos del Query
@@ -174,7 +183,7 @@ function lapizzeria_specialties_frontend( $attributes ) {
 
     $template = "
         <section class='menu'>
-            <h2 class='menu-title'>" .$attributes[ 'titleBlock' ]. "</h2>
+            <h2 class='menu-title'>" .( ( $attributes[ 'titleBlock' ] == 'Title Block' || $attributes[ 'titleBlock' ] == '' ) ? __( 'Our specialties', 'plugin-lapizzeria-bkl' ) : $attributes[ 'titleBlock' ] ). "</h2>
             <ul class='menu-list'>
                 " .$list_of_publications. "
             </ul>
