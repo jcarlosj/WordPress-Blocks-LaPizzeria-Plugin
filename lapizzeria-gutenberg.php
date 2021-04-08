@@ -119,7 +119,14 @@ function lapizzeria_specialties_frontend( $attributes ) {
     $args = array(
         'post_type'     => 'specialties',
         'post_status'   => 'publish',
-        'numberposts'   => $attributes[ 'numberOfPosts' ]
+        'numberposts'   => $attributes[ 'numberOfPosts' ],
+        'tax_query'     => array(       //  Consulta por taxonomia
+            array(
+                'taxonomy'  => 'lapizzeria-category-menu',                 //  rest_base
+                'terms'     => $attributes[ 'selectedCategory' ],   //  ID de la categoria 
+                'field'     => 'term_id'                            //  Campo que deseamos filtrar
+            )
+        )
     );
 
     $specialties = wp_get_recent_posts( $args );    #  Obtenemos datos del Query
@@ -167,7 +174,7 @@ function lapizzeria_specialties_frontend( $attributes ) {
 
     $template = "
         <section class='menu'>
-            <h2 class='menu-title'>" .__( 'Our specialties', 'plugin-lapizzeria-bkl' ). "</h2>
+            <h2 class='menu-title'>" .$attributes[ 'titleBlock' ]. "</h2>
             <ul class='menu-list'>
                 " .$list_of_publications. "
             </ul>
